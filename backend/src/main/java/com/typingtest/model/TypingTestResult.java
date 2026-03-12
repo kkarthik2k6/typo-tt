@@ -1,11 +1,18 @@
 package com.typingtest.model;
 
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "typing_test_results")
 public class TypingTestResult {
 
+    @Id
     private String id;
+
+    @Column(nullable = false)
     private String username;
+
     private double wpm;
     private double accuracy;
     private int totalCharacters;

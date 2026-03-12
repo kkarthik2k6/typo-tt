@@ -1,25 +1,17 @@
 package com.typingtest.repository;
 
 import com.typingtest.model.TypingTestResult;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Repository
-public class TypingTestResultRepository {
+public interface TypingTestResultRepository extends JpaRepository<TypingTestResult, String> {
 
-    // In-memory storage wrapper
-    private final List<TypingTestResult> results = Collections.synchronizedList(new ArrayList<>());
+    // Spring Data JPA auto-generates these methods:
+    // save(), findAll(), findById(), deleteById(), etc.
 
-    public TypingTestResult save(TypingTestResult result) {
-        results.add(result);
-        return result;
-    }
-
-    public List<TypingTestResult> findAll() {
-        // Return a copy to prevent external modification
-        return new ArrayList<>(results);
-    }
+    // Custom query: find top 5 results ordered by WPM descending
+    List<TypingTestResult> findTop5ByOrderByWpmDesc();
 }
