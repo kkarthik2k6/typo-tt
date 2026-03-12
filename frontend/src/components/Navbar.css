@@ -1,0 +1,67 @@
+.nav-container {
+  background-color: var(--card-bg);
+  border-bottom: 1px solid var(--border-color);
+  padding: 1rem 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+}
+
+.nav-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.nav-brand:hover {
+  transform: scale(1.05);
+}
+
+.brand-icon {
+  font-size: 1.5rem;
+}
+
+.brand-text {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-main);
+  background: linear-gradient(to right, #60a5fa, #3b82f6);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.nav-link {
+  background: transparent;
+  color: var(--text-muted);
+  box-shadow: none;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+}
+
+.nav-link:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-main);
+  box-shadow: none;
+  transform: translateY(0);
+}
+
+.nav-link.active {
+  color: var(--primary-color);
+  background: rgba(59, 130, 246, 0.1);
+}

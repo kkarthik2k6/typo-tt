@@ -1,0 +1,7 @@
+/home/karthik/Desktop/typo/backend/src/main/java/com/typingtest/config/CorsConfig.java
+/home/karthik/Desktop/typo/backend/src/main/java/com/typingtest/controller/TypingTestResultController.java
+/home/karthik/Desktop/typo/backend/src/main/java/com/typingtest/exception/GlobalExceptionHandler.java
+/home/karthik/Desktop/typo/backend/src/main/java/com/typingtest/service/TypingTestResultService.java
+/home/karthik/Desktop/typo/backend/src/main/java/com/typingtest/TypingTestApplication.java
+/home/karthik/Desktop/typo/backend/src/main/java/com/typingtest/repository/TypingTestResultRepository.java
+/home/karthik/Desktop/typo/backend/src/main/java/com/typingtest/model/TypingTestResult.java
