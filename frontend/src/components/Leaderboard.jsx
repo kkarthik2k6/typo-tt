@@ -44,32 +44,61 @@ const Leaderboard = () => {
             <p>No results yet. Be the first!</p>
           </div>
         ) : (
-          <div className="leader-list">
-            <div className="leader-header">
-              <span>Rank</span>
-              <span>Name</span>
-              <span>WPM</span>
-              <span>Acc</span>
-              <span>Date</span>
+          <>
+            <div className="podium-container">
+              {/* Rank 2 */}
+              {leaders[1] && (
+                <div className="podium-step rank-2 animate-fade-in delay-1">
+                  <div className="podium-medal">🥈</div>
+                  <div className="name">{leaders[1].username}</div>
+                  <div className="wpm-highlight">{leaders[1].wpm}</div>
+                </div>
+              )}
+              {/* Rank 1 */}
+              {leaders[0] && (
+                <div className="podium-step rank-1 animate-fade-in delay-0">
+                  <div className="podium-medal">👑</div>
+                  <div className="name">{leaders[0].username}</div>
+                  <div className="wpm-highlight">{leaders[0].wpm}</div>
+                </div>
+              )}
+              {/* Rank 3 */}
+              {leaders[2] && (
+                <div className="podium-step rank-3 animate-fade-in delay-2">
+                  <div className="podium-medal">🥉</div>
+                  <div className="name">{leaders[2].username}</div>
+                  <div className="wpm-highlight">{leaders[2].wpm}</div>
+                </div>
+              )}
             </div>
-            
-            {leaders.map((leader, index) => (
-              <div 
-                key={leader.id} 
-                className={`leader-row animate-fade-in delay-${index}`}
-              >
-                <div className="rank">
-                  {index === 0 ? '👑' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`}
+
+            {leaders.length > 3 && (
+              <div className="leader-list">
+                <div className="leader-header">
+                  <span>Rank</span>
+                  <span>Name</span>
+                  <span>WPM</span>
+                  <span>Acc</span>
+                  <span>Date</span>
                 </div>
-                <div className="name">{leader.username}</div>
-                <div className="wpm-highlight">{leader.wpm}</div>
-                <div className="acc">{leader.accuracy}%</div>
-                <div className="date">
-                  {new Date(leader.testDate).toLocaleDateString()}
-                </div>
+                
+                {leaders.slice(3).map((leader, index) => (
+                  <div 
+                    key={leader.id} 
+                    className={`leader-row animate-fade-in delay-${index + 3}`}
+                  >
+                    <div className="rank">#{index + 4}</div>
+                    <div className="name">{leader.username}</div>
+                    <div className="wpm-highlight">{leader.wpm}</div>
+                    <div className="acc">{leader.accuracy}%</div>
+                    <div className="date">
+                      {new Date(leader.testDate).toLocaleDateString()}
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            )}
+          </>
         )}
       </div>
     </div>

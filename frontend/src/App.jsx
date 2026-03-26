@@ -5,6 +5,7 @@ import TypingTest from "./components/TypingTest";
 import ResultScreen from "./components/ResultScreen";
 import Leaderboard from "./components/Leaderboard";
 import Footer from './components/Footer';
+import Particles from './components/Particles';
 import "./index.css";
 
 
@@ -34,26 +35,40 @@ function App() {
     return () => clearTimeout(timeout);
   }, [isTransitioning]);
 
-  // Global keyboard shortcuts
+  // Global keyboard shortcuts and mouse parallax
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
-        // Don't navigate away if user is typing in an input
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
           e.target.blur();
           return;
         }
-        if (currentScreen !== 'home') {
-          navigate('home');
-        }
+        if (currentScreen !== 'home') navigate('home');
       }
     };
+
+    // Parallax mouse effect
+    const handleMouseMove = (e) => {
+      // Calculate from center of screen (-1 to 1)
+      const x = (e.clientX / window.innerWidth - 0.5) * 2;
+      const y = (e.clientY / window.innerHeight - 0.5) * 2;
+      
+      // Give it a subtle max rotation of e.g. 5 degrees
+      document.documentElement.style.setProperty('--mouse-x', `${x * 5}deg`);
+      document.documentElement.style.setProperty('--mouse-y', `${-y * 5}deg`);
+    };
+
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
   }, [currentScreen, displayedScreen]);
 
   return (
     <>
+      <Particles />
       <Navbar navigate={navigate} currentScreen={displayedScreen} />
 
       <main className={`container page-transition ${isTransitioning ? 'fade-out' : 'fade-in'}`}>

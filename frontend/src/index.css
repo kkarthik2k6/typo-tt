@@ -14,6 +14,7 @@
   --text-tertiary: rgba(255, 255, 255, 0.4);
 
   --accent: #ffffff;
+  --accent: #ffffff;
   
   --correct-color: rgba(255, 255, 255, 0.9);
   --incorrect-color: rgba(255, 255, 255, 0.3);
@@ -166,6 +167,11 @@ body::after {
   position: relative;
   overflow: hidden;
   z-index: 10;
+  
+  /* Parallax hover tilt */
+  transform: perspective(1500px) rotateY(var(--mouse-x, 0deg)) rotateX(var(--mouse-y, 0deg));
+  transform-style: preserve-3d;
+  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .card > * {

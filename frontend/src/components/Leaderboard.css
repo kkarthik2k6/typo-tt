@@ -15,6 +15,82 @@
 .leaderboard-content {
   width: 100%;
   flex: 1;
+  /* ==========================================
+     PODIUM (TOP 3)
+     ========================================== */
+  .podium-container {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .podium-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px 12px 4px 4px;
+    padding: 1.5rem 1rem;
+    min-width: 120px;
+    position: relative;
+    transition: transform 0.3s ease;
+  }
+
+  .podium-step:hover {
+    transform: translateY(-5px);
+  }
+
+  .podium-medal {
+    font-size: 2rem;
+    position: absolute;
+    top: -1.2rem;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
+  }
+
+  .podium-step .name {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    margin-top: 1rem;
+  }
+
+  .podium-step .wpm-highlight {
+    font-size: 1.8rem;
+    font-weight: 500;
+    margin-top: 0.5rem;
+    color: var(--text-primary);
+    font-family: "JetBrains Mono", monospace;
+  }
+
+  .podium-step.rank-1 {
+    height: 180px;
+    background: linear-gradient(180deg, rgba(250, 204, 21, 0.1) 0%, rgba(250, 204, 21, 0.02) 100%);
+    border-color: rgba(250, 204, 21, 0.3);
+    box-shadow: 0 -10px 40px rgba(250, 204, 21, 0.1);
+  }
+  .podium-step.rank-1 .wpm-highlight { color: #facc15; }
+
+  .podium-step.rank-2 {
+    height: 140px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.01) 100%);
+  }
+
+  .podium-step.rank-3 {
+    height: 110px;
+    background: linear-gradient(180deg, rgba(217, 119, 6, 0.08) 0%, rgba(217, 119, 6, 0.01) 100%);
+    border-color: rgba(217, 119, 6, 0.15);
+  }
+  .podium-step.rank-3 .wpm-highlight { color: #fcd34d; }
+
+  /* ==========================================
+     LIST (RANK 4+)
+     ========================================== */
   display: flex;
   flex-direction: column;
 }

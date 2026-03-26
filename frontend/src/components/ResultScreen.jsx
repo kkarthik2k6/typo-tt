@@ -29,6 +29,42 @@ const useCountUp = (end, duration = 1500) => {
   return count;
 };
 
+const ProgressRing = ({ value, label, max = 100, colorClass, suffix = "" }) => {
+  const radius = 55;
+  const stroke = 5;
+  const normalizedRadius = radius - stroke * 2;
+  const circumference = normalizedRadius * 2 * Math.PI;
+  const strokeDashoffset = circumference - (Math.min(value, max) / max) * circumference;
+
+  return (
+    <div className={`stat-ring-wrapper ${colorClass}`}>
+      <svg height={radius * 2} width={radius * 2} className="progress-ring">
+        <circle
+          className="ring-bg"
+          strokeWidth={stroke}
+          r={normalizedRadius}
+          cx={radius}
+          cy={radius}
+        />
+        <circle
+          className="ring-progress"
+          strokeWidth={stroke}
+          strokeDasharray={circumference + ' ' + circumference}
+          style={{ strokeDashoffset }}
+          strokeLinecap="round"
+          r={normalizedRadius}
+          cx={radius}
+          cy={radius}
+        />
+      </svg>
+      <div className="ring-content">
+        <span className="sc-value">{value}{suffix}</span>
+        <span className="sc-label">{label}</span>
+      </div>
+    </div>
+  );
+};
+
 const ResultScreen = ({ result, navigate }) => {
   const [username, setUsername] = useState('');
   const [isSaving, setIsSaving] = useState(false);
@@ -78,18 +114,25 @@ const ResultScreen = ({ result, navigate }) => {
       <p className="card-subtitle">Here are your final statistics</p>
 
       <div className="stats-grid">
-        <div className="stat-circle primary">
-          <span className="sc-value">{animatedWpm}</span>
-          <span className="sc-label">WPM</span>
-        </div>
-        <div className="stat-circle secondary">
-          <span className="sc-value">{animatedAccuracy}%</span>
-          <span className="sc-label">Accuracy</span>
-        </div>
-        <div className="stat-circle tertiary">
-          <span className="sc-value">{animatedChars}</span>
-          <span className="sc-label">Chars</span>
-        </div>
+        <ProgressRing 
+          value={animatedWpm} 
+          label="WPM" 
+          max={150} 
+          colorClass="primary" 
+        />
+        <ProgressRing 
+          value={animatedAccuracy} 
+          label="Accuracy" 
+          max={100} 
+          colorClass="secondary" 
+          suffix="%"
+        />
+        <ProgressRing 
+          value={animatedChars} 
+          label="Chars" 
+          max={500} 
+          colorClass="tertiary" 
+        />
       </div>
 
       <div className="actions-section">
