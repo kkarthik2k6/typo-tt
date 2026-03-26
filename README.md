@@ -1,67 +1,116 @@
-# Typing Test Web Application
+# Typo. — Premium Typing Test
 
-A full-stack, aesthetically pleasing typing test application built with Spring Boot (Java 17) and Vite (React JS). It tracks words per minute (WPM), typing accuracy, total characters, and correct characters without requiring a database connection (uses in-memory storage).
+A full-stack typing test application with a dark glassmorphism UI theme. Built with Spring Boot + React (Vite). Track your WPM, accuracy, and compete on a global leaderboard.
+
+![Dark Glass Theme](https://img.shields.io/badge/Theme-Dark_Glassmorphism-black?style=for-the-badge)
+![Java 17](https://img.shields.io/badge/Java-17-orange?style=for-the-badge)
+![React](https://img.shields.io/badge/React-19-blue?style=for-the-badge)
 
 ## Features
 
-- **Backend**: Spring Boot 3 + Java 17
-  - In-memory data store for saving scores and global leaderboard.
-- **Frontend**: Vite + React
-  - Responsive modern UI, sleek CSS styles.
-  - 60-second typing test with real-time accuracy and WPM tracking.
-  - Character highlighting (green for correct, red for incorrect).
+- **3 Difficulty Modes** — Easy (common words), Medium (paragraphs), Hard (code snippets)
+- **Configurable Timer** — 15s, 30s, 60s, 120s
+- **Smooth Animated Caret** — Monkeytype-style gliding cursor
+- **Live Stats** — Real-time WPM & accuracy tracking
+- **Global Leaderboard** — Save and compare scores
+- **Dark Glass UI** — Premium glassmorphism with matte 3D background shapes
 
----
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Frontend | React 19, Vite, Vanilla CSS |
+| Backend | Java 17, Spring Boot 3.2, Spring Data JPA |
+| Database | PostgreSQL (NeonDB) |
+| Deployment | Vercel (frontend) + Render (backend) + NeonDB |
 
 ## Project Structure
 
-```bash
-root/
-├── backend/    # Spring Boot Java application
-└── frontend/   # Vite React application
+```
+typo/
+├── backend/                    # Spring Boot API
+│   ├── src/main/java/com/typingtest/
+│   │   ├── config/             # CORS configuration
+│   │   ├── controller/         # REST endpoints
+│   │   ├── model/              # JPA entities
+│   │   ├── repository/         # Data access
+│   │   └── service/            # Business logic
+│   ├── src/main/resources/
+│   │   ├── application.properties          # (gitignored — has secrets)
+│   │   └── application.properties.example  # Template for setup
+│   ├── Dockerfile
+│   └── pom.xml
+├── frontend/                   # React + Vite
+│   ├── src/
+│   │   ├── components/         # All UI components + CSS
+│   │   ├── App.jsx             # Root component & routing
+│   │   ├── index.css           # Global theme (dark glass)
+│   │   └── main.jsx            # Entry point
+│   ├── .env.example            # Template for env vars
+│   ├── Dockerfile
+│   └── package.json
+├── docker-compose.yml          # Local Docker setup
+├── .gitignore
+└── README.md
 ```
 
-## Running the Application Locally
+## Local Development
 
-### 1. Start the Backend
+### Prerequisites
+- Java 17 + Maven
+- Node.js 18+ + npm
+- A PostgreSQL database (e.g., [NeonDB](https://neon.tech) free tier)
 
-Prerequisites: Java 17 and Maven installed.
+### 1. Backend Setup
 
-1. Navigate to the backend directory:
-   ```bash
-   cd backend
-   ```
-2. Build and run the Spring Boot application:
-   ```bash
-   mvn clean install
-   mvn spring-boot:run
-   ```
-3. The server will start on `http://localhost:8080`.
+```bash
+cd backend
 
-### 2. Start the Frontend
+# Copy the template and fill in your NeonDB credentials
+cp src/main/resources/application.properties.example src/main/resources/application.properties
+# Edit application.properties with your database URL, username, password
 
-Prerequisites: Node.js (v18+) and npm installed.
+# Run
+mvn spring-boot:run
+```
+Server starts at `http://localhost:8080`
 
-1. Navigate to the frontend directory (open a new terminal):
-   ```bash
-   cd frontend
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Start the Vite development server:
-   ```bash
-   npm run dev
-   ```
-4. The frontend will start locally on `http://localhost:5173`.
+### 2. Frontend Setup
 
----
+```bash
+cd frontend
 
-## Usage
+# Copy env template
+cp .env.example .env
 
-1. Open `http://localhost:5173` in your browser.
-2. Click **Start Typing Test** on the home page.
-3. Begin typing. The 60-second timer automatically starts on your first keystroke.
-4. When the timer ends, review your results.
-5. Enter your name and save to view the leaderboard!
+# Install & run
+npm install
+npm run dev
+```
+App starts at `http://localhost:5173`
+
+## Deployment
+
+### Frontend → Vercel
+1. Import the `frontend/` directory in Vercel
+2. Set build command: `npm run build`
+3. Set output directory: `dist`
+4. Set environment variable: `VITE_API_URL` = your Render backend URL
+
+### Backend → Render
+1. Create a new Web Service pointing to `backend/`
+2. Set build command: `mvn clean package -DskipTests`
+3. Set start command: `java -jar target/*.jar`
+4. Set environment variables:
+   - `DATABASE_URL` = your NeonDB JDBC URL
+   - `DATABASE_USERNAME` = your NeonDB username
+   - `DATABASE_PASSWORD` = your NeonDB password
+   - `CORS_ALLOWED_ORIGINS` = your Vercel frontend URL
+
+### Database → NeonDB
+1. Create a free project at [neon.tech](https://neon.tech)
+2. Copy the connection string details to your Render env vars
+
+## License
+
+MIT

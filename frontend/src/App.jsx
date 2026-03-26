@@ -7,10 +7,12 @@ import Leaderboard from "./components/Leaderboard";
 import Footer from './components/Footer';
 import "./index.css";
 
+
 function App() {
   const [currentScreen, setCurrentScreen] = useState("home");
   const [testResult, setTestResult] = useState(null);
   const [testDuration, setTestDuration] = useState(60);
+  const [difficulty, setDifficulty] = useState("medium");
 
   const navigate = (screen) => setCurrentScreen(screen);
 
@@ -24,12 +26,15 @@ function App() {
             navigate={navigate} 
             testDuration={testDuration}
             setTestDuration={setTestDuration}
+            difficulty={difficulty}
+            setDifficulty={setDifficulty}
           />
         )}
         
         {currentScreen === "test" && (
           <TypingTest
             duration={testDuration}
+            difficulty={difficulty}
             onComplete={(result) => {
               setTestResult(result);
               navigate("result");

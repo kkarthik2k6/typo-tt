@@ -14,3 +14,7 @@ frontend/.env
 .vscode/
 *.iml
 .DS_Store
+
+# OS
+Thumbs.db
+*.log

@@ -1,16 +1,29 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap");
 
 :root {
-  --bg-color: #0f172a;
-  --card-bg: #1e293b;
-  --text-main: #f8fafc;
-  --text-muted: #64748b;
-  --primary-color: #3b82f6;
-  --primary-hover: #2563eb;
-  --correct-color: #22c55e;
-  --incorrect-color: #ef4444;
-  --border-color: #334155;
-  --shadow-color: rgba(0, 0, 0, 0.25);
+  --bg-deep: #000000;
+  --bg-dark: #080808;
+
+  --glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+  --glass-tint: rgba(10, 10, 10, 0.2);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+  --glass-blur: 30px;
+
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.55);
+  --text-tertiary: rgba(255, 255, 255, 0.3);
+
+  --accent: #ffffff;
+  
+  --correct-color: rgba(255, 255, 255, 0.9);
+  --incorrect-color: rgba(255, 255, 255, 0.3);
+  --warning-color: #ffffff;
+
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 32px;
+
+  --transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 * {
@@ -19,22 +32,55 @@
   padding: 0;
 }
 
+html { scroll-behavior: smooth; }
+
 body {
-  font-family:
-    "Inter",
-    system-ui,
-    -apple-system,
-    sans-serif;
-  background-color: var(--bg-color);
-  background-image: radial-gradient(
-    circle at top right,
-    #1e293b 0%,
-    #0f172a 50%
-  );
-  color: var(--text-main);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--bg-deep);
+  color: var(--text-primary);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ==========================================
+   MATTE BLACK 3D SHAPES (CRISP, NOT BLURRY)
+   ========================================== */
+
+/* Large Matte Sphere - Top Right */
+body::before {
+  content: "";
+  position: fixed;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  top: -10%;
+  right: -5%;
+  background: radial-gradient(circle at 30% 30%, #3a3a3a 0%, #151515 45%, #000000 80%);
+  box-shadow: inset -20px -20px 40px rgba(0, 0, 0, 0.9);
+  pointer-events: none;
+  z-index: 0;
+  animation: float1 20s ease-in-out infinite alternate;
+}
+
+/* Medium Matte Sphere - Bottom Left */
+body::after {
+  content: "";
+  position: fixed;
+  width: 350px;
+  height: 350px;
+  border-radius: 50%;
+  bottom: -5%;
+  left: 5%;
+  background: radial-gradient(circle at 40% 30%, #2a2a2a 0%, #0a0a0a 50%, #000000 80%);
+  box-shadow: inset -15px -15px 30px rgba(0, 0, 0, 0.95);
+  pointer-events: none;
+  z-index: 0;
+  animation: float2 25s ease-in-out infinite alternate;
 }
 
 #root {
@@ -42,101 +88,207 @@ body {
   flex-direction: column;
   min-height: 100vh;
   width: 100%;
+  position: relative;
+  z-index: 1;
 }
 
-button {
-  cursor: pointer;
-  font-family: inherit;
-  border: none;
-  background: var(--primary-color);
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  font-weight: 600;
+/* Fake 3D Torus / Ring - Center Left */
+#root::before {
+  content: "";
+  position: fixed;
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  top: 40%;
+  left: 15%;
+  border: 55px solid #151515;
+  box-shadow: 
+    inset 8px 8px 15px rgba(255, 255, 255, 0.05),
+    inset -15px -15px 20px rgba(0, 0, 0, 0.8),
+    20px 20px 30px rgba(0, 0, 0, 0.9);
+  pointer-events: none;
+  z-index: 0;
+  animation: float3 30s ease-in-out infinite alternate;
+}
+
+/* Small Accent Sphere - Center Right */
+#root::after {
+  content: "";
+  position: fixed;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  top: 60%;
+  right: 25%;
+  background: radial-gradient(circle at 35% 35%, #444 0%, #111 50%, #000 85%);
+  box-shadow: inset -10px -10px 20px rgba(0, 0, 0, 0.9);
+  pointer-events: none;
+  z-index: 0;
+  animation: float1 15s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes float1 {
+  0% { transform: translateY(0px) translateX(0px); }
+  100% { transform: translateY(20px) translateX(-15px); }
+}
+
+@keyframes float2 {
+  0% { transform: translateY(0px) translateX(0px); }
+  100% { transform: translateY(-25px) translateX(15px); }
+}
+
+@keyframes float3 {
+  0% { transform: translateY(0px) rotate(0deg) scale(1); }
+  100% { transform: translateY(-20px) rotate(10deg) scale(1.02); }
+}
+
+/* ==========================================
+   GLASS CARD BASE (MOCKUP ACCURATE)
+   ========================================== */
+.card {
+  background: var(--glass-bg);
+  background-color: var(--glass-tint); /* The dark tint */
+  backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+  border-radius: var(--radius-lg);
+  padding: 3.5rem 4rem;
+  width: 100%;
+  border: var(--glass-border);
+  box-shadow:
+    inset 1px 1px 1px rgba(255, 255, 255, 0.25), /* Strong top-left light hit */
+    inset -1px -1px 2px rgba(0, 0, 0, 0.5), /* Bottom right inner shadow */
+    0 40px 60px rgba(0, 0, 0, 0.9); /* Massive deep drop shadow */
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  z-index: 10;
+}
+
+.card > * {
+  position: relative;
+  z-index: 2;
+}
+
+.card-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+  text-align: center;
+  color: var(--text-primary);
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+
+.card-subtitle {
+  color: var(--text-secondary);
   font-size: 1rem;
-  transition: all 0.2s ease-in-out;
-  box-shadow: 0 4px 6px -1px var(--shadow-color);
+  font-weight: 400;
+  margin-bottom: 2rem;
+  text-align: center;
+  line-height: 1.6;
 }
 
-button:hover {
-  background: var(--primary-hover);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px var(--shadow-color);
-}
 
-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}
-
+/* ==========================================
+   LAYOUT
+   ========================================== */
 .container {
-  max-width: 800px;
+  max-width: 860px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 2.5rem 2rem;
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 100%;
+  position: relative;
+  z-index: 2;
 }
 
-.card {
-  background-color: var(--card-bg);
-  border-radius: 16px;
-  padding: 2.5rem;
-  width: 100%;
-  box-shadow:
-    0 20px 25px -5px var(--shadow-color),
-    0 8px 10px -6px var(--shadow-color);
-  border: 1px solid var(--border-color);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+
+/* ==========================================
+   GLOBAL BUTTON — Minimal Frosted Glass
+   ========================================== */
+button {
+  cursor: pointer;
+  font-family: inherit;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--text-primary);
+  padding: 0.8rem 1.8rem;
+  border-radius: 50px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: all var(--transition);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  letter-spacing: 0.02em;
+  position: relative;
 }
 
-.card-title {
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-  text-align: center;
-  background: linear-gradient(to right, #60a5fa, #3b82f6);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+button:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
 }
 
-.card-subtitle {
-  color: var(--text-muted);
-  font-size: 1rem;
-  margin-bottom: 2rem;
-  text-align: center;
+button:active {
+  transform: translateY(0) scale(0.98);
 }
 
-/* Animations */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+
+/* ==========================================
+   ANIMATIONS
+   ========================================== */
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.97) translateY(14px); filter: blur(4px); }
+  to { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.4s ease-out forwards;
+  animation: fadeInScale 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
+/* ==========================================
+   SCROLLBAR & SELECTION
+   ========================================== */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
 }
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+::selection {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+@media (max-width: 640px) {
+  .card {
+    padding: 2.5rem 2rem;
+    border-radius: 28px;
+  }
+  .card-title { font-size: 1.5rem; }
+  .card-subtitle { font-size: 0.9rem; margin-bottom: 1.5rem; }
+  .container { padding: 1.5rem; }
+}
+

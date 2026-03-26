@@ -1,132 +1,205 @@
 .typing-test-card {
-  max-width: 800px;
-  position: relative;
-  overflow: hidden;
+  max-width: 920px;
+  padding: 3.5rem;
 }
 
 .test-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   width: 100%;
-  margin-bottom: 2rem;
-  padding: 1rem;
-  background: rgba(15, 23, 42, 0.5);
-  border-radius: 12px;
-  border: 1px solid var(--border-color);
+  margin-bottom: 2.5rem;
+  gap: 3rem;
+  align-items: flex-start;
 }
 
 .stat-box {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .stat-label {
-  font-size: 0.85rem;
-  color: var(--text-muted);
+  font-size: 0.6rem;
+  color: var(--text-tertiary);
   text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 0.5rem;
+  letter-spacing: 0.15em;
+  margin-bottom: 0.4rem;
+  font-weight: 500;
 }
 
 .stat-value {
-  font-size: 2rem;
-  font-weight: 700;
-  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.8rem;
+  font-weight: 500;
+  font-family: "JetBrains Mono", monospace;
+  color: var(--text-primary);
+  letter-spacing: -0.03em;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
 }
 
-.timer-glow {
-  color: #fbbf24;
-  text-shadow: 0 0 10px rgba(251, 191, 36, 0.4);
+.stat-value.timer-warning {
+  color: #ff6b6b;
+  text-shadow: 0 0 20px rgba(255, 107, 107, 0.3);
+  animation: pulse-warning 1s ease-in-out infinite;
+}
+
+@keyframes pulse-warning {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* Difficulty badge */
+.difficulty-badge-box {
+  margin-left: auto;
+}
+
+.difficulty-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 0.3rem 0.8rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-secondary);
+}
+
+.difficulty-badge.easy {
+  color: #4ade80;
+  border-color: rgba(74, 222, 128, 0.2);
+  background: rgba(74, 222, 128, 0.06);
+}
+
+.difficulty-badge.medium {
+  color: #facc15;
+  border-color: rgba(250, 204, 21, 0.2);
+  background: rgba(250, 204, 21, 0.06);
+}
+
+.difficulty-badge.hard {
+  color: #ff6b6b;
+  border-color: rgba(255, 107, 107, 0.2);
+  background: rgba(255, 107, 107, 0.06);
 }
 
 .progress-bar-container {
-  width: 100%;
-  height: 4px;
-  background: var(--border-color);
-  border-radius: 2px;
-  margin-bottom: 2rem;
-  overflow: hidden;
+  display: none;
 }
 
-.progress-bar {
-  height: 100%;
-  background: var(--primary-color);
-  transition: width 1s linear;
-}
-
+/* ==========================================
+   TEXT DISPLAY
+   ========================================== */
 .text-display {
-  font-size: 1.5rem;
-  line-height: 1.6;
-  font-family: 'JetBrains Mono', monospace;
-  color: var(--text-muted);
+  font-size: 1.35rem;
+  line-height: 2;
+  font-family: "JetBrains Mono", monospace;
+  color: var(--text-tertiary);
   text-align: left;
-  padding: 1rem;
-  min-height: 200px;
+  min-height: 180px;
   position: relative;
   cursor: text;
   word-wrap: break-word;
   user-select: none;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin-bottom: 2rem;
+  width: 100%;
 }
 
+/* ==========================================
+   SMOOTH ANIMATED CARET (monkeytype style)
+   ========================================== */
+.smooth-caret {
+  position: absolute;
+  width: 2.5px;
+  height: 1.6em;
+  background: #ffffff;
+  border-radius: 2px;
+  z-index: 10;
+  pointer-events: none;
+  transition: transform 80ms cubic-bezier(0.18, 0.89, 0.32, 1.2);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.4),
+              0 0 20px rgba(255, 255, 255, 0.1);
+  will-change: transform;
+}
+
+.smooth-caret.blink {
+  animation: caret-blink 1.2s ease-in-out infinite;
+}
+
+@keyframes caret-blink {
+  0%, 100% { opacity: 1; }
+  40% { opacity: 1; }
+  50% { opacity: 0; }
+  90% { opacity: 0; }
+}
+
+/* ==========================================
+   TEXT CHARACTERS
+   ========================================== */
 .text-char {
-  transition: color 0.1s;
+  transition: color 0.08s ease;
+  position: relative;
 }
 
 .text-char.correct {
-  color: var(--text-main);
+  color: #ffffff;
+  opacity: 1;
 }
 
 .text-char.incorrect {
-  color: var(--incorrect-color);
-  background: rgba(239, 68, 68, 0.2);
-  border-radius: 2px;
+  color: #ff6b6b;
+  opacity: 1;
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 107, 107, 0.4);
+  text-underline-offset: 3px;
 }
 
+/* Remove old pseudo-element cursor since we use the smooth-caret div now */
 .text-char.current {
-  border-left: 2px solid var(--primary-color);
-  animation: cursor-blink 1s infinite alternate;
+  /* No styles needed - caret is handled by .smooth-caret */
 }
 
-@keyframes cursor-blink {
-  0% { border-color: transparent; }
-  100% { border-color: var(--primary-color); }
+.text-char.current::before {
+  display: none;
 }
 
 .text-word {
-  display: inline-block;
-  padding: 0 2px;
-  border-radius: 4px;
-  transition: background-color 0.15s ease;
+  display: inline;
+  padding: 0;
 }
 
 .text-word.current-word {
-  background-color: rgba(59, 130, 246, 0.15);
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+  background-color: transparent;
 }
 
+/* ==========================================
+   ACTIONS & MISC
+   ========================================== */
 .test-actions {
   display: flex;
-  justify-content: center;
-  margin-top: 2rem;
+  justify-content: flex-start;
+  margin-top: 1rem;
 }
 
 .restart-btn {
-  background: transparent;
-  color: var(--text-muted);
-  border: 1px solid var(--border-color);
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.6rem 1.4rem;
+  font-size: 0.85rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  box-shadow: none;
+  border-radius: 8px;
+  transition: all 0.2s ease;
 }
 
 .restart-btn:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--text-main);
-  border-color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
+  border-color: rgba(255, 255, 255, 0.15);
   transform: translateY(-1px);
 }
 
@@ -137,8 +210,10 @@
 }
 
 .hint-text {
-  margin-top: 1rem;
-  color: var(--text-muted);
-  font-size: 0.85rem;
-  text-align: center;
+  margin-top: 1.5rem;
+  color: var(--text-tertiary);
+  font-size: 0.7rem;
+  text-align: left;
+  letter-spacing: 0.05em;
+  opacity: 0.6;
 }

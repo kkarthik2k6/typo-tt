@@ -6,8 +6,7 @@ const Navbar = ({ navigate, currentScreen }) => {
     <nav className="nav-container">
       <div className="nav-content">
         <div className="nav-brand" onClick={() => navigate('home')}>
-          <span className="brand-icon">⌨️</span>
-          <span className="brand-text">Typo</span>
+          <span className="brand-text">Typo.</span>
         </div>
         <div className="nav-links">
           <button 

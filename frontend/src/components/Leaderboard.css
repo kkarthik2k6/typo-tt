@@ -1,6 +1,15 @@
 .leaderboard-card {
-  max-width: 800px;
-  min-height: 500px;
+  max-width: 760px;
+  min-height: 480px;
+  padding: 3rem;
+}
+
+.leaderboard-card .card-title {
+  font-size: 2rem;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin-bottom: 2rem;
 }
 
 .leaderboard-content {
@@ -13,86 +22,86 @@
 .leader-list {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0; /* Remove gap, we want them tight like a list */
   width: 100%;
 }
 
 .leader-header {
   display: grid;
-  grid-template-columns: 60px 1fr 80px 80px 100px;
-  padding: 1rem 1.5rem;
-  background: rgba(15, 23, 42, 0.8);
-  border-radius: 8px;
-  color: var(--text-muted);
-  font-size: 0.85rem;
+  grid-template-columns: 55px 1fr 80px 80px 95px;
+  padding: 0.5rem 1rem 1rem;
+  color: var(--text-tertiary);
+  font-size: 0.6rem;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.15em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08); /* Separator */
+  margin-bottom: 0.5rem;
 }
 
 .leader-row {
   display: grid;
-  grid-template-columns: 60px 1fr 80px 80px 100px;
+  grid-template-columns: 55px 1fr 80px 80px 95px;
   align-items: center;
-  padding: 1rem 1.5rem;
-  background: rgba(30, 41, 59, 0.5);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  transition: transform 0.2s, background 0.2s;
+  padding: 1rem;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  border-radius: 0;
+  transition: all 0.2s ease;
+  opacity: 0;
+  animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .leader-row:hover {
-  transform: translateX(4px);
-  background: rgba(30, 41, 59, 0.8);
-  border-color: var(--primary-color);
+  background: rgba(255, 255, 255, 0.02);
+  transform: none;
+  box-shadow: none;
+  border-color: rgba(255, 255, 255, 0.08);
 }
 
-.delay-0 { animation-delay: 0.1s; }
-.delay-1 { animation-delay: 0.2s; }
-.delay-2 { animation-delay: 0.3s; }
-.delay-3 { animation-delay: 0.4s; }
-.delay-4 { animation-delay: 0.5s; }
-
 .rank {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--text-muted);
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--text-tertiary);
 }
 
 .name {
-  font-weight: 600;
-  color: var(--text-main);
+  font-weight: 500;
+  color: var(--text-primary);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   padding-right: 1rem;
+  font-size: 0.95rem;
 }
 
 .wpm-highlight {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #3b82f6;
-  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  font-family: "JetBrains Mono", monospace;
 }
 
 .acc {
-  color: var(--correct-color);
-  font-weight: 500;
+  color: var(--text-secondary);
+  font-weight: 400;
+  font-size: 0.9rem;
 }
 
 .date {
-  color: var(--text-muted);
-  font-size: 0.85rem;
+  color: var(--text-tertiary);
+  font-size: 0.75rem;
 }
 
 .loading-spinner {
-  margin: auto;
-  width: 40px;
-  height: 40px;
-  border: 3px solid rgba(59, 130, 246, 0.3);
+  margin: 3rem auto;
+  width: 24px;
+  height: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 50%;
-  border-top-color: var(--primary-color);
-  animation: spin 1s ease-in-out infinite;
+  border-top-color: rgba(255, 255, 255, 0.5);
+  animation: spin 0.8s ease-in-out infinite;
 }
 
 @keyframes spin {
@@ -100,22 +109,18 @@
 }
 
 .error-message, .empty-state {
-  margin: auto;
+  margin: 4rem auto;
   text-align: center;
-  color: var(--text-muted);
-}
-
-.error-icon, .empty-icon {
-  font-size: 3rem;
-  display: block;
-  margin-bottom: 1rem;
+  color: var(--text-secondary);
 }
 
 .error-message p {
-  color: var(--incorrect-color);
-  background: rgba(239, 68, 68, 0.1);
-  padding: 1rem;
-  border-radius: 8px;
+  color: var(--text-primary);
+  background: transparent;
+  padding: 0;
+  border: none;
+  font-size: 0.85rem;
+  opacity: 0.6;
 }
 
 @media (max-width: 600px) {
@@ -124,7 +129,5 @@
   }
   .leader-header span:nth-child(4),
   .leader-header span:nth-child(5),
-  .acc, .date {
-    display: none;
-  }
+  .acc, .date { display: none; }
 }
