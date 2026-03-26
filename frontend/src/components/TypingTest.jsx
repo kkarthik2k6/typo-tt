@@ -99,6 +99,19 @@ const TypingTest = ({ duration = 60, difficulty = 'medium', onComplete, onRunnin
   const inputRef = useRef(null);
   const textDisplayRef = useRef(null);
 
+  // Raw keystroke tracking refs (survive re-renders, no stale closures)
+  const totalKeypressesRef = useRef(0);
+  const correctKeypressesRef = useRef(0);
+  // Refs to always hold latest state (fixes stale closure in timer effect)
+  const userInputRef = useRef('');
+  const paragraphRef = useRef('');
+  const timerRef = useRef(duration);
+
+  // Keep refs in sync with state
+  useEffect(() => { userInputRef.current = userInput; }, [userInput]);
+  useEffect(() => { paragraphRef.current = paragraph; }, [paragraph]);
+  useEffect(() => { timerRef.current = timer; }, [timer]);
+
   useEffect(() => {
     if (onRunningChange) {
       onRunningChange(isRunning);
@@ -108,12 +121,18 @@ const TypingTest = ({ duration = 60, difficulty = 'medium', onComplete, onRunnin
   const initTest = useCallback(() => {
     const p = getTextForDifficulty(difficulty);
     setParagraph(p);
+    paragraphRef.current = p;
     setTimer(duration);
+    timerRef.current = duration;
     setIsRunning(false);
     setUserInput('');
+    userInputRef.current = '';
     setStats({ wpm: 0, accuracy: 100, correctChars: 0, totalCharsEscaped: 0 });
     setCurrentWordIndex(0);
     setCaretPos({ left: 0, top: 0 });
+    // Reset raw keystroke counters
+    totalKeypressesRef.current = 0;
+    correctKeypressesRef.current = 0;
     if (textDisplayRef.current) {
       textDisplayRef.current.scrollTop = 0;
     }
@@ -128,6 +147,37 @@ const TypingTest = ({ duration = 60, difficulty = 'medium', onComplete, onRunnin
       inputRef.current.focus();
     }
   }, [paragraph]);
+
+  // Track every raw keystroke for accurate accuracy measurement
+  useEffect(() => {
+    const textarea = inputRef.current;
+    if (!textarea) return;
+
+    const handleRawKeystroke = (e) => {
+      // Ignore modifier keys, Tab, Enter, Escape, arrows, etc.
+      if (e.key === 'Tab' || e.key === 'Escape' || e.key === 'Enter' ||
+          e.key === 'Shift' || e.key === 'Control' || e.key === 'Alt' || e.key === 'Meta' ||
+          e.key === 'CapsLock' || e.key.startsWith('Arrow') ||
+          e.key === 'Home' || e.key === 'End' || e.key === 'PageUp' || e.key === 'PageDown' ||
+          e.key === 'Insert' || e.key === 'Delete' || e.key.startsWith('F')) return;
+
+      // Backspace is not a "typing" keystroke — skip it
+      if (e.key === 'Backspace') return;
+
+      // This is a real typing keystroke
+      totalKeypressesRef.current++;
+
+      // Check if this keystroke is correct
+      const currentInputLength = userInputRef.current.length;
+      const expectedChar = paragraphRef.current[currentInputLength];
+      if (e.key === expectedChar) {
+        correctKeypressesRef.current++;
+      }
+    };
+
+    textarea.addEventListener('keydown', handleRawKeystroke);
+    return () => textarea.removeEventListener('keydown', handleRawKeystroke);
+  }, [paragraph]); // Re-attach when paragraph changes
 
   /* Smooth caret position tracking */
   useEffect(() => {
@@ -144,11 +194,10 @@ const TypingTest = ({ duration = 60, difficulty = 'medium', onComplete, onRunnin
       
       // Auto-scroll when caret goes below 2 lines
       const relativeTop = charRect.top - displayRect.top;
-      if (relativeTop > 80) { // e.g., line 3
-        textDisplayRef.current.scrollTop += 45; // scroll 1 line height
+      if (relativeTop > 80) {
+        textDisplayRef.current.scrollTop += 45;
       }
     } else if (userInput.length > 0 && userInput.length >= paragraph.length) {
-      // End of text — hide caret
       const lastChar = textDisplayRef.current.querySelector('.text-char:last-child');
       if (lastChar) {
         const displayRect = textDisplayRef.current.getBoundingClientRect();
@@ -186,7 +235,7 @@ const TypingTest = ({ duration = 60, difficulty = 'medium', onComplete, onRunnin
     };
   }, [initTest]);
 
-  // Timer Effect
+  // Timer Effect — uses refs to avoid stale closures
   useEffect(() => {
     let interval;
     if (isRunning && timer > 0) {
@@ -195,38 +244,43 @@ const TypingTest = ({ duration = 60, difficulty = 'medium', onComplete, onRunnin
       }, 1000);
     } else if (timer === 0 && isRunning) {
       setIsRunning(false);
-      finishTest();
+      // Use refs for guaranteed latest values (no stale closure)
+      finishTest(userInputRef.current, 0);
     }
     return () => clearInterval(interval);
   }, [isRunning, timer]);
 
   const calculateStats = (input, currentParagraph, currentTimerValue) => {
-    let correct = 0;
+    // Count correct characters in the CURRENT visible input (for WPM)
+    let correctInView = 0;
     for (let i = 0; i < input.length; i++) {
         if (input[i] === currentParagraph[i]) {
-            correct++;
+            correctInView++;
         }
     }
     
     const timeElapsed = duration - currentTimerValue;
-    // Prevent division by zero; minimum 1 second elapsed
     const timeInMinutes = timeElapsed > 0 ? timeElapsed / 60 : 1/60; 
     
+    // WPM uses correct chars in view (standard net WPM formula)
     const currentWpm = timeElapsed > 0 
-      ? Math.round((correct / 5) / timeInMinutes) 
+      ? Math.round((correctInView / 5) / timeInMinutes) 
       : 0;
 
-    const currentAccuracy = input.length > 0 
-      ? Math.round((correct / input.length) * 100) 
+    // ACCURACY uses raw keystrokes (tracks every mistake, even corrected ones)
+    const totalRaw = totalKeypressesRef.current;
+    const correctRaw = correctKeypressesRef.current;
+    const currentAccuracy = totalRaw > 0 
+      ? Math.round((correctRaw / totalRaw) * 100) 
       : 100;
 
-    return { wpm: currentWpm, accuracy: currentAccuracy, correctChars: correct, totalCharsEscaped: input.length };
+    return { wpm: currentWpm, accuracy: currentAccuracy, correctChars: correctInView, totalCharsEscaped: input.length };
   };
 
-  // Keep WPM updating strictly in real-time every second
+  // Keep stats updating strictly in real-time every second
   useEffect(() => {
     if (isRunning) {
-      setStats(calculateStats(userInput, paragraph, timer));
+      setStats(calculateStats(userInputRef.current, paragraphRef.current, timer));
     }
   }, [timer]);
 
@@ -258,16 +312,18 @@ const TypingTest = ({ duration = 60, difficulty = 'medium', onComplete, onRunnin
     setStats(newStats);
   };
 
-  const finishTest = (input = userInput, currentTimer = timer) => {
-    const timeTaken = duration - currentTimer;
-    // Always force an exact final mathematical calculation
-    const finalStats = calculateStats(input, paragraph, currentTimer);
+  const finishTest = (input, currentTimer) => {
+    // Use refs as fallback for guaranteed latest values
+    const finalInput = input !== undefined ? input : userInputRef.current;
+    const finalTimer = currentTimer !== undefined ? currentTimer : timerRef.current;
+    const timeTaken = duration - finalTimer;
+    const finalStats = calculateStats(finalInput, paragraphRef.current, finalTimer);
     
     onComplete({
       wpm: finalStats.wpm,
       accuracy: finalStats.accuracy,
       correctCharacters: finalStats.correctChars,
-      totalCharacters: input.length,
+      totalCharacters: finalInput.length,
       timeTaken: timeTaken === 0 ? 1 : timeTaken
     });
   };
