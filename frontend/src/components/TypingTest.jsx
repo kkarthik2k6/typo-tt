@@ -108,6 +108,9 @@ const TypingTest = ({ duration = 60, difficulty = 'medium', onComplete }) => {
     setStats({ wpm: 0, accuracy: 100, correctChars: 0, totalCharsEscaped: 0 });
     setCurrentWordIndex(0);
     setCaretPos({ left: 0, top: 0 });
+    if (textDisplayRef.current) {
+      textDisplayRef.current.scrollTop = 0;
+    }
   }, [duration, difficulty]);
 
   useEffect(() => {
@@ -127,10 +130,17 @@ const TypingTest = ({ duration = 60, difficulty = 'medium', onComplete }) => {
     if (currentCharEl) {
       const displayRect = textDisplayRef.current.getBoundingClientRect();
       const charRect = currentCharEl.getBoundingClientRect();
-      setCaretPos({
-        left: charRect.left - displayRect.left,
-        top: charRect.top - displayRect.top,
-      });
+      
+      const newLeft = charRect.left - displayRect.left;
+      const newTop = charRect.top - displayRect.top + textDisplayRef.current.scrollTop;
+      
+      setCaretPos({ left: newLeft, top: newTop });
+      
+      // Auto-scroll when caret goes below 2 lines
+      const relativeTop = charRect.top - displayRect.top;
+      if (relativeTop > 80) { // e.g., line 3
+        textDisplayRef.current.scrollTop += 45; // scroll 1 line height
+      }
     } else if (userInput.length > 0 && userInput.length >= paragraph.length) {
       // End of text — hide caret
       const lastChar = textDisplayRef.current.querySelector('.text-char:last-child');
@@ -139,7 +149,7 @@ const TypingTest = ({ duration = 60, difficulty = 'medium', onComplete }) => {
         const charRect = lastChar.getBoundingClientRect();
         setCaretPos({
           left: charRect.right - displayRect.left,
-          top: charRect.top - displayRect.top,
+          top: charRect.top - displayRect.top + textDisplayRef.current.scrollTop,
         });
       }
     }
@@ -184,10 +194,10 @@ const TypingTest = ({ duration = 60, difficulty = 'medium', onComplete }) => {
     return () => clearInterval(interval);
   }, [isRunning, timer]);
 
-  const calculateStats = (input) => {
+  const calculateStats = (input, currentParagraph) => {
     let correct = 0;
     for (let i = 0; i < input.length; i++) {
-        if (input[i] === paragraph[i]) {
+        if (input[i] === currentParagraph[i]) {
             correct++;
         }
     }
@@ -214,21 +224,24 @@ const TypingTest = ({ duration = 60, difficulty = 'medium', onComplete }) => {
     }
     
     const val = e.target.value;
-    if (val.length > paragraph.length) return;
+    
+    // Auto-extend text when approaching the end (within 30 chars)
+    let newParagraph = paragraph;
+    if (val.length >= paragraph.length - 30) {
+      newParagraph = paragraph + ' ' + getTextForDifficulty(difficulty);
+      setParagraph(newParagraph);
+    }
+
+    if (val.length > newParagraph.length) return;
 
     setUserInput(val);
     
     // Calculate current word index for highlighting
-    const words = paragraph.substring(0, val.length).split(' ');
+    const words = newParagraph.substring(0, val.length).split(' ');
     setCurrentWordIndex(words.length - 1);
 
-    const newStats = calculateStats(val);
+    const newStats = calculateStats(val, newParagraph);
     setStats(newStats);
-
-    if (val.length === paragraph.length) {
-      setIsRunning(false);
-      finishTest(newStats, val, timer);
-    }
   };
 
   const finishTest = (finalStats = stats, input = userInput, currentTimer = timer) => {

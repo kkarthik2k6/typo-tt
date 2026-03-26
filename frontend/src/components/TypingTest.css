@@ -96,7 +96,8 @@
   font-family: "JetBrains Mono", monospace;
   color: var(--text-tertiary);
   text-align: left;
-  min-height: 180px;
+  height: 145px; /* Roughly 3 lines of text */
+  overflow: hidden;
   position: relative;
   cursor: text;
   word-wrap: break-word;
@@ -106,6 +107,7 @@
   padding: 0;
   margin-bottom: 2rem;
   width: 100%;
+  scroll-behavior: smooth;
 }
 
 /* ==========================================
