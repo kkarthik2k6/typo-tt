@@ -5,9 +5,6 @@ const Navbar = ({ navigate, currentScreen }) => {
   return (
     <nav className="nav-container">
       <div className="nav-content">
-        <div className="nav-brand" onClick={() => navigate('home')}>
-          <span className="brand-text">Typo.</span>
-        </div>
         <div className="nav-links">
           <button 
             className={`nav-link ${currentScreen === 'home' ? 'active' : ''}`}

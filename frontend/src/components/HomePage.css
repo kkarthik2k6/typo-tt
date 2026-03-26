@@ -1,26 +1,18 @@
 .homepage-card {
-  max-width: 760px;
   margin: 0 auto;
-  text-align: left;
-}
-
-.homepage-card .card-title {
-  font-size: 3.5rem;
-  font-weight: 800;
-  letter-spacing: -0.05em;
-  color: var(--text-primary);
-  margin-bottom: 0.5rem;
-  display: block;
+  text-align: center;
+  justify-content: space-between;
+  padding: 3.5rem 4rem;
 }
 
 .homepage-card .card-subtitle {
-  font-size: 1.15rem;
+  font-size: 1.5rem;
   font-weight: 400;
   color: var(--text-secondary);
   margin-bottom: 2.5rem;
-  max-width: 480px;
   line-height: 1.6;
-  display: block;
+  text-align: center;
+  width: 100%;
 }
 
 /* ==========================================
@@ -28,35 +20,37 @@
    ========================================== */
 .selectors-row {
   display: flex;
-  gap: 3rem;
+  gap: 4rem;
   width: 100%;
-  margin: 1rem 0;
+  justify-content: center;
+  margin: 1.5rem 0;
   flex-wrap: wrap;
 }
 
 .selector-group {
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
+  align-items: center;
+  gap: 1rem;
 }
 
 .selector-label {
   display: inline-block;
   color: var(--text-tertiary);
   font-weight: 500;
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   background: rgba(255,255,255,0.05);
   border: 1px solid rgba(255,255,255,0.1);
-  padding: 0.35rem 0.7rem;
-  border-radius: 4px;
+  padding: 0.45rem 0.9rem;
+  border-radius: 6px;
   width: fit-content;
 }
 
 .selector-options {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.6rem;
   flex-wrap: wrap;
 }
 
@@ -65,10 +59,10 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
   color: var(--text-secondary);
   box-shadow: inset 1px 1px 1px rgba(255, 255, 255, 0.02);
-  padding: 0.55rem 1.25rem;
-  border-radius: 8px;
-  min-width: 60px;
-  font-size: 0.85rem;
+  padding: 0.75rem 1.6rem;
+  border-radius: 10px;
+  min-width: 70px;
+  font-size: 0.95rem;
   font-weight: 500;
   letter-spacing: 0.02em;
   transition: all 0.2s ease;
@@ -91,58 +85,54 @@
     0 4px 10px rgba(0,0,0,0.3);
 }
 
-/* Difficulty-specific active colors */
 .diff-btn.easy.active {
   color: #4ade80;
   border-color: rgba(74, 222, 128, 0.3);
   background: rgba(74, 222, 128, 0.1);
-  box-shadow: 
-    inset 1px 1px 2px rgba(74, 222, 128, 0.15),
-    0 4px 10px rgba(0,0,0,0.3);
+  box-shadow: inset 1px 1px 2px rgba(74, 222, 128, 0.15), 0 4px 10px rgba(0,0,0,0.3);
 }
 
 .diff-btn.medium.active {
   color: #facc15;
   border-color: rgba(250, 204, 21, 0.3);
   background: rgba(250, 204, 21, 0.1);
-  box-shadow: 
-    inset 1px 1px 2px rgba(250, 204, 21, 0.15),
-    0 4px 10px rgba(0,0,0,0.3);
+  box-shadow: inset 1px 1px 2px rgba(250, 204, 21, 0.15), 0 4px 10px rgba(0,0,0,0.3);
 }
 
 .diff-btn.hard.active {
   color: #ff6b6b;
   border-color: rgba(255, 107, 107, 0.3);
   background: rgba(255, 107, 107, 0.1);
-  box-shadow: 
-    inset 1px 1px 2px rgba(255, 107, 107, 0.15),
-    0 4px 10px rgba(0,0,0,0.3);
+  box-shadow: inset 1px 1px 2px rgba(255, 107, 107, 0.15), 0 4px 10px rgba(0,0,0,0.3);
 }
 
 /* ==========================================
-   FEATURES & CTA
+   FEATURES — spread full width
    ========================================== */
 .features-grid {
   display: flex;
-  gap: 2rem;
-  margin: 2.5rem 0 1rem;
-  padding-top: 2rem;
+  justify-content: space-between;
+  width: 100%;
+  margin: 2.5rem 0 1.5rem;
+  padding-top: 2.5rem;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
-  flex-wrap: wrap;
 }
 
 .feature-item {
   color: var(--text-tertiary);
-  font-size: 0.75rem;
+  font-size: 0.9rem;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.1em;
 }
 
+/* ==========================================
+   START BUTTON — centered
+   ========================================== */
 .start-btn {
-  font-size: 0.95rem;
-  padding: 1rem 3rem;
-  border-radius: 8px;
+  font-size: 1.1rem;
+  padding: 1.1rem 3.5rem;
+  border-radius: 10px;
   background: #ffffff;
   border: none;
   color: #000000;
@@ -151,7 +141,7 @@
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   margin-top: 2rem;
   box-shadow: 0 4px 15px rgba(255, 255, 255, 0.15);
-  align-self: flex-start;
+  align-self: center;
 }
 
 .start-btn:hover {
@@ -166,6 +156,7 @@
 
 @media (max-width: 600px) {
   .selectors-row { flex-direction: column; gap: 1.5rem; }
-  .features-grid { flex-direction: column; gap: 1rem; }
-  .start-btn { width: 100%; align-self: stretch; text-align: center; }
+  .features-grid { flex-direction: column; gap: 1rem; text-align: center; }
+  .start-btn { width: 100%; }
+  .homepage-card .card-subtitle { font-size: 1.2rem; }
 }

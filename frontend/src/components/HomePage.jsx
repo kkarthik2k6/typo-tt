@@ -11,7 +11,6 @@ const HomePage = ({ navigate, testDuration, setTestDuration, difficulty, setDiff
 
   return (
     <div className="card animate-fade-in homepage-card">
-      <h1 className="card-title">Typo.</h1>
       <p className="card-subtitle">
         Master your typing speed and climb the global ranks.
       </p>
