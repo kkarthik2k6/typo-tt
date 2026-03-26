@@ -200,7 +200,7 @@ const TypingTest = ({ duration = 60, difficulty = 'medium', onComplete, onRunnin
     return () => clearInterval(interval);
   }, [isRunning, timer]);
 
-  const calculateStats = (input, currentParagraph) => {
+  const calculateStats = (input, currentParagraph, currentTimerValue) => {
     let correct = 0;
     for (let i = 0; i < input.length; i++) {
         if (input[i] === currentParagraph[i]) {
@@ -208,7 +208,8 @@ const TypingTest = ({ duration = 60, difficulty = 'medium', onComplete, onRunnin
         }
     }
     
-    const timeElapsed = duration - timer;
+    const timeElapsed = duration - currentTimerValue;
+    // Prevent division by zero; minimum 1 second elapsed
     const timeInMinutes = timeElapsed > 0 ? timeElapsed / 60 : 1/60; 
     
     const currentWpm = timeElapsed > 0 
@@ -221,6 +222,13 @@ const TypingTest = ({ duration = 60, difficulty = 'medium', onComplete, onRunnin
 
     return { wpm: currentWpm, accuracy: currentAccuracy, correctChars: correct, totalCharsEscaped: input.length };
   };
+
+  // Keep WPM updating strictly in real-time every second
+  useEffect(() => {
+    if (isRunning) {
+      setStats(calculateStats(userInput, paragraph, timer));
+    }
+  }, [timer]);
 
   const handleInputChange = (e) => {
     if (timer === 0) return;
@@ -246,12 +254,15 @@ const TypingTest = ({ duration = 60, difficulty = 'medium', onComplete, onRunnin
     const words = newParagraph.substring(0, val.length).split(' ');
     setCurrentWordIndex(words.length - 1);
 
-    const newStats = calculateStats(val, newParagraph);
+    const newStats = calculateStats(val, newParagraph, timer);
     setStats(newStats);
   };
 
-  const finishTest = (finalStats = stats, input = userInput, currentTimer = timer) => {
+  const finishTest = (input = userInput, currentTimer = timer) => {
     const timeTaken = duration - currentTimer;
+    // Always force an exact final mathematical calculation
+    const finalStats = calculateStats(input, paragraph, currentTimer);
+    
     onComplete({
       wpm: finalStats.wpm,
       accuracy: finalStats.accuracy,
