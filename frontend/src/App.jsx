@@ -16,6 +16,7 @@ function App() {
   const [difficulty, setDifficulty] = useState("medium");
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [displayedScreen, setDisplayedScreen] = useState("home");
+  const [isTyping, setIsTyping] = useState(false);
   const pendingScreen = useRef(null);
 
   const navigate = (screen) => {
@@ -69,7 +70,7 @@ function App() {
   return (
     <>
       <Particles />
-      <Navbar navigate={navigate} currentScreen={displayedScreen} />
+      <Navbar navigate={navigate} currentScreen={displayedScreen} isHidden={isTyping} />
 
       <main className={`container page-transition ${isTransitioning ? 'fade-out' : 'fade-in'}`}>
         {currentScreen === "home" && (
@@ -88,8 +89,10 @@ function App() {
             difficulty={difficulty}
             onComplete={(result) => {
               setTestResult(result);
+              setIsTyping(false);
               navigate("result");
             }}
+            onRunningChange={setIsTyping}
           />
         )}
 

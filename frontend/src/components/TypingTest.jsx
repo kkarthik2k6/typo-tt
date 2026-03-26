@@ -87,7 +87,7 @@ const getTextForDifficulty = (difficulty) => {
    TYPING TEST COMPONENT
    ========================================== */
 
-const TypingTest = ({ duration = 60, difficulty = 'medium', onComplete }) => {
+const TypingTest = ({ duration = 60, difficulty = 'medium', onComplete, onRunningChange }) => {
   const [timer, setTimer] = useState(duration);
   const [isRunning, setIsRunning] = useState(false);
   const [userInput, setUserInput] = useState('');
@@ -98,6 +98,12 @@ const TypingTest = ({ duration = 60, difficulty = 'medium', onComplete }) => {
   
   const inputRef = useRef(null);
   const textDisplayRef = useRef(null);
+
+  useEffect(() => {
+    if (onRunningChange) {
+      onRunningChange(isRunning);
+    }
+  }, [isRunning, onRunningChange]);
 
   const initTest = useCallback(() => {
     const p = getTextForDifficulty(difficulty);
